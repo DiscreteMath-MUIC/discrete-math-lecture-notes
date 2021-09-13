@@ -1,0 +1,536 @@
+\documentclass[a4paper, 12pt]{article}
+
+\usepackage{hyperref}
+\usepackage{fullpage}
+\usepackage[top=0.5in, bottom=1.5in, left=0.5in, right=0.5in, footskip=4em]{geometry}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{pgfornament}
+
+\usepackage{enumitem}
+\usepackage{xspace}
+\usepackage{lastpage}
+\usepackage{multicol}
+\usepackage{blindtext}
+\usepackage{titling}
+\usepackage{standalone}
+\usepackage{amsfonts}
+\usepackage[framemethod=TikZ]{mdframed}
+\usetikzlibrary{calc}
+\usepackage{lineno}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{datetime}
+\usetikzlibrary{tikzmark}
+\linenumbers
+
+
+%BEGIN_FOLD Commands
+\newcommand{\epv}[1]{\ensuremath{\left< #1 \right>}\xspace}
+\newcommand{\variance}{\ensuremath{\text{Var}}}
+\newcommand{\eout}{\ensuremath{E_\text{out}}\xspace}
+\newcommand{\ein}{\ensuremath{E_\text{in}}\xspace}
+\newcommand{\cx}{\ensuremath{\mathcal{X}}\xspace}
+\newcommand{\cz}{\ensuremath{\mathcal{Z}}\xspace}
+\newcommand{\real}{\mathbb{R}}
+\DeclareSymbolFont{extraup}{U}{zavm}{m}{n}
+\DeclareMathSymbol{\varheart}{\mathalpha}{extraup}{86}
+\DeclareMathSymbol{\vardiamond}{\mathalpha}{extraup}{87}
+\renewcommand{\heartsuit}{\textcolor{red}{\varheart}}
+\renewcommand{\diamondsuit}{\textcolor{red}{\vardiamond}}
+\newcommand{\definition}{\textbf{Def:} }
+\newcommand{\theorem}{\textbf{Theorem:} }
+\renewcommand{\proof}{\textbf{Proof:} }
+\newcommand{\hint}{\textbf{Hint:} }
+\newcommand{\basecase}{\textbf{Base Case:} }
+\newcommand{\kwd}[1]{\textcolor{blue}{\textbf{\underline{#1}}}}
+\newcommand\ColorBox[2][]{%
+	\stepcounter{mybox}%
+	\node[draw=red!70!black,fill=red!20,align=left,#1] (box\themybox) {#2};
+}
+\newcommand{\expl}[2]{%
+	\underset{\substack{\uparrow\\\mathrlap{\text{\hspace{-1em}#2}}}}{#1}}
+\newcommand{\st}{\text{ such that }}
+%\newcommand{\qed}{\ensuremath{\blacksquare}}
+%END_FOLD
+
+
+%BEGIN_FOLD miscellaneious default
+\makeatletter
+% Make a copy of macros responsible for entering display math mode
+\let\start@align@nopar\start@align
+\let\start@gather@nopar\start@gather
+\let\start@multline@nopar\start@multline
+% Add the "empty line" command to the macros
+\long\def\start@align{\par\start@align@nopar}
+\long\def\start@gather{\par\start@gather@nopar}
+\long\def\start@multline{\par\start@multline@nopar}
+\makeatother
+\setlength{\columnsep}{1cm}
+%opening
+\setlength{\abovedisplayskip}{-\baselineskip}%
+\setlength{\abovedisplayshortskip}{\abovedisplayskip}%
+
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\lfoot{\small{\course}: Week \weekno}
+\rfoot{\small{\thetitle}}
+\rhead{}
+\cfoot{\pgfornament[height=1em, ydelta=-0.4em]{11} \thepage of \pageref{LastPage}  \pgfornament[height=1em, ydelta=-0.4em]{14}}
+
+\DeclareMathOperator{\sign}{sign}
+\newcommand{\vect}[1]{\ensuremath{\mathbf{#1}}\xspace}
+
+\tikzstyle{every picture}+=[remember picture]
+\newcommand{\bwgrid}[1]{
+	\def \aaa #1
+	
+	\foreach \y in {0,1,2} {
+		\foreach \x in {0,1,2} {
+			\pgfmathsetmacro{\clr}{\aaa[\x][\y]}
+			%\message{aaa \clr}
+			\definecolor{MyColor}{rgb}{\clr,\clr,\clr}
+			\path[fill=MyColor] (\x,\y) rectangle ++(1,1); 
+		}
+	}
+	\draw[step=1cm,very thin] (0,0) grid (3,3);	
+}
+
+\setenumerate{label=\alph*.)}
+\definecolor{db}{RGB}{100,65,23}
+\newtheoremstyle{examplestyle}% name
+{}%         Space above, empty = `usual value'
+{}%         Space below
+{}% Body font
+{}%         Indent amount (empty = no indent, \parindent = para indent)
+{}% Thm head font
+{}%        Punctuation after thm head
+{\newline}% Space after thm head: \newline = linebreak
+{\textbf{\textcolor{db}{\thmname{#1}\thmnumber{ #2}:} \thmnote{ #3}}}%         Thm head spec
+\theoremstyle{examplestyle}
+
+\newtheorem{examplethm}{Example}
+\newenvironment{example}[1][]{\begin{mdframed}[style=example]\begin{examplethm}[#1]}{\end{examplethm}\end{mdframed}}
+
+\newenvironment{example*}[1][]{\begin{mdframed}[style=example]\begin{examplethm}[#1]\end{examplethm}}{\end{mdframed}}
+\newenvironment{Figure}
+{\par\medskip\noindent\minipage{\linewidth}}
+{\endminipage\par\medskip}
+\newenvironment{formula}{
+	\begin{mdframed}[style=formula]
+	}{
+\end{mdframed}}
+%END_FOLD
+
+\newcommand{\course}{Discrete Math}
+\title{Basic of Proof}
+\newcommand{\weekno}{1}
+
+\begin{document}
+\begin{center}
+	\textcolor{orange}{\textsc{\course}}\\
+	\huge\textbf{\textsc{\thetitle}}\\
+	\small\textcolor{gray}{Last updated:\, \today \, \currenttime}\\
+	\pgfornament[width=0.7\textwidth, color=white!30!black]{89}
+\end{center}
+
+\begin{multicols}{2}
+	
+A good chunk of this class will be about proof. This is most likely to be the first place you learn about mathematical proof. You may have taken some math courses or even calculus before. But this is something different. This class is all about reasoning which is in fact the real heart of math.
+
+Let us start consider what exactly is a proof. The formal definition of proof would not do us any good. To understand what a proof is we must understand the ``feeling" when we have proved something. This can be shown with the following five card trick.
+
+
+\section*{The Five Card Trick}
+
+Magic show is like mathematical theorem. Theorem claims that something is true. Magic just put the truth right in front of our eyes and left us wonder how that works. Proving is like fully understanding how the magic works. As you read this trick, keep in mind that what we want you to understand that feeling when we have fully understood something.
+
+Here is what the audience will see in the trick
+\begin{itemize}
+	\item A volunteer pick 5 cards showed it to the magician.
+	\item The magician then look at these 5 cards and return one card to volunteer. The rest of the cards are laid out on a table.
+	\item A random stranger comes in inpsect the cards on the table and tell the card the magician return to the volunteer?
+\end{itemize}
+
+So, the first question we have would be how did the stranger figure out the suit? If you have seen it for a few times, I'm sure you will figure out that it is as simple as the suit of the first card. 
+
+Does this mean that we fully understand the suit part of the trick? Of course not. Even though we know that the strager figure out the suit from from the first card. How can the magician guarantee that he will have two cards of the same suit such that to leave one on the table and another to hand back to the volunteer?
+
+\begin{itemize}
+	\item You will learn this later. It is called the pigeon hole principle. There are 4 suit and since the volunteer pick 5 cards you are guarantee to have at least one suit that has at least two cards.
+\end{itemize}
+
+Again, we are not done yet. We still have the question of the rank left. The stranger gets the rank correct too. If you think about it, it must be the other three cards that the magician laid out on the table. Of course, the magician has no control over the rank of the 3 cards. So, the only tool of communication available to the magician would be the ordering of the three cards on the table High(H), Medium(M) and Low(L).
+
+However, there are only $3\times 2 \times 1 = 6$ way to arrange HML. Yet, there are 13 rank. This alone is not enough for the magician and the stranger to communicate. As in most proof, we guess, we fail and we guess again.
+
+Here is the important part. The card that the magician return is always the double suit card. If we arrange the rank of cards in a circle then pick any two points the shortest distance between the two cards is at most $\frac{13-1}{2} = 6$. 
+
+\begin{center}
+	\begin{tikzpicture}
+\draw[gray, dashed] (0,0) circle (2cm);
+\node()[draw] at (0:2cm) {A};
+\node()[] at (27:2cm) {2};
+\node()[] at (55:2cm) {3};
+\node()[] at (83:2cm) {4};
+\node()[] at (110:2cm) {5};
+\node()[] at (138:2cm) {6};
+\node()[] at (166:2cm) {7};
+\node()[draw] at (193:2cm) {8};
+\node()[] at (221:2cm) {9};
+\node()[] at (249:2cm) {10};
+\node()[] at (276:2cm) {J};
+\node()[] at (304:2cm) {Q};
+\node()[] at (332:2cm) {K};
+
+\end{tikzpicture}
+\end{center}
+
+This means that we can use the first card as the base then use the other three card to communicate the shift we can really convey information about 13 cards.
+
+Therefore, to perform this trick all you need to do is to agree before hand which arrangement of HML means which number from 1 to 6. The one I use in the class is
+\begin{center}
+\begin{tabular}{c|c}
+	\hline\hline LMH & 1  \\ 
+	\hline LHM & 2 \\ 
+	\hline MLH & 3 \\ 
+	\hline MHL & 4 \\ 
+	\hline HLM & 5 \\ 
+	\hline HML & 6 \\
+	\hline \hline
+\end{tabular} 
+\end{center}
+
+
+Also you will need to communicate which way to shift the card. For example, if the cards the volunteer pick are
+
+\[
+	3\clubsuit, 2\heartsuit, A \spadesuit, 5\spadesuit, 7 \diamondsuit
+\]
+
+From this, we want the stranger to do $A\spadesuit + 4$ to get $5\spadesuit$. Therefore, we should return $5\spadesuit$ to the volunteer. After that I should arrange the card on the table to represent $A\spadesuit + 4$ which is $A\spadesuit + MHL$. Therefore the card on the table would be(if you have same number you and rank the suit in someway ex: slave ranking).
+\[
+	A\spadesuit, 3\clubsuit, 7\diamondsuit, 2\heartsuit
+\]
+
+When the stranger comes in and look at the table, it is clear to him that the suit of the hidden card has to be $\spadesuit$. Plus the amount of shift he needs to do is MHL=4. Thus, the stranger then do the arithmetic $A\spadesuit + 4 = 5\spadesuit$.
+
+With all this, we feel that we have completed the understanding of the magic. We can actually replicate the magic. No question left to ask. It is important we keep questioning ourselves if there is anything left to ask -- Did we just fool ourself?
+
+\section*{Vocabulary}
+
+To make writing proof short and make it easier to communicate with other people let us first learn some vocabulary.
+
+\section*{Basic Set Notation}
+In this class, we will be dealing with set a lot.
+
+Set is loosely a collection of things the order doesn't matter. For example,
+\begin{align}
+	A &= \{\text{cat, dog, mouse}\}\\
+	B &= \{1, 2, 3\}\\
+	C &= \{a \in I^+ |a \text{ is odd} \}\\
+	D &= \{x \in \real | x^2 - 2x + 1 = 0 \}	
+\end{align}
+
+There are also simple set operation that is union and intersection. The union of the two set $A$ and $B$ is a set that contains all the elements in $A$ and all the elements in $B$. For example,
+\[
+	\{1,2,3\} \cup \{2,3,4\} = \{1,2,3,4\}
+\]
+
+The intersection of two set, $A$ and $B$, is a set that contains all the element that presents in both set $A$ and $B$. For example,
+\[
+	\{1,2,3\} \cap \{2,3,4\} = \{2,3\}
+\]
+
+\section*{Proof}
+
+This class also deal with proofing stuff a lot. We are going to give a loose definition of proof here as a method of ascertaining the truth.
+
+\definition A \kwd{proposition} is a statement that is true or false.
+
+A proposition doesn't have to be true. It can be false. We don't even need to know the answer whether it is true or false. All we need to know is that it is either true or false.
+
+Example of something that is a proposition:
+\begin{center}
+	$2+3=5$\\
+	$2+3=1$
+\end{center}
+
+Example of statement that is not a proposition:
+\begin{center}
+	What is love$\heartsuit$?\\
+	\vspace{0.5em}
+	What is the meaning of life universe and everything? (42 By the way)\\
+	\vspace{0.5em}
+	This statement is false.
+\end{center}
+
+Here are some example to give you an idea of proof:
+\begin{example}
+	\theorem There are xxx students in this class.\\
+	\proof I just counted. \qed
+\end{example}
+
+\begin{example}
+	\theorem If $x>2$ then $x^2>4$.\\
+	\setlength{\abovedisplayskip}{-\baselineskip}%
+	\setlength{\abovedisplayshortskip}{\abovedisplayskip}%
+	\proof \begin{align*}	      
+		x &> 2\\
+		x\cdot x &> 2 \cdot x > 2 \cdot 2 \qed
+	\end{align*}
+\end{example}
+
+\begin{example}
+	\theorem If $x\ge2$ then $x^2 > 5$.\\
+	\proof False. Counter example $x=2$, $x^2 = 4 < 5$. \qed
+\end{example}
+
+
+Sometime counter example is not so easy to find
+\begin{example}
+	\theorem For $n \in I$ if $n>0$ then $n^2 + n + 41$ is a prime.
+	
+	False counter example of n=41.
+\end{example}
+
+\subsection*{Predicate and Qualifier}
+
+\definition A \kwd{predicate} is a proposition whose truth value depends on the value of the variable. You can think about this as a function that takes in a value then return true/false.
+
+For example,
+\begin{center}
+	$n^2 +n + 41$ is a prime.
+\end{center}
+is a predicate since the truth value of the statement depends on the variable $n$.
+
+	The previous theorm contains qualifier and proposition.
+\begin{align*}
+	\expl{\forall}{\text{quantifier}} n \in I, n \ge 0 \; \; \underbrace{n^2 + n + 41 \text{is a prime}}_{\text{Proposition}}
+\end{align*}
+The symbol $\forall$ reads for all. The proposition above is true if and only if the predicate that follows is true for every single number $n \in I$. Thus since $n=41$ doesn't make it true. The proposition above is false.
+
+There is a related symbol for requiring just element in the set to give make it true.
+\begin{align*}
+	\expl{\exists}{\text{quantifier}} n \in I, n \ge 0 \; \; \underbrace{n^2 + n + 41 \text{is a prime}}_{\text{Proposition}}
+\end{align*}
+The statement above reads for some(there exists) an integer $n$ such that the following predicate is true. The proposition is true if we can find just a number to make the predicate true. The above propositiion is true since $n=0$ make the predicate true.
+
+\begin{example}
+	There exists a real number $x$ such that the square is less than one.
+	\[
+	\exists x \in \real \text{ such that } x^2 < 1
+	\]
+\end{example}
+
+
+\begin{example}
+	All real number $x$ has the square less than one.
+	\[
+	\forall x \in \real, x^2 < 1
+	\]
+\end{example}
+
+\begin{example}
+	There exists a male student in this room
+	\[
+	\exists x \in \text{Student}, x \text{ is Male}
+	\]
+\end{example}
+\newpage
+\begin{example}[Euler Conjecture]
+	\theorem $a^5 + b^5 + c^5 + d^5 = e^5$ has no integer solution
+	\[
+		\forall a,b,c,d,e \in I^+, 	a^5 + b^5 + c^5 + d^5 \ne e^5
+	\]
+	The theorem is actually false since
+	\[
+		27^5 + 84^5 + 110^5 +133^5 = 144^5
+	\]
+	But it took 200 years to find it. One of the shortest paper ever.\footnote{\url{http://www.ams.org/journals/bull/1966-72-06/S0002-9904-1966-11654-3/S0002-9904-1966-11654-3.pdf}}
+\end{example}
+
+\begin{example}
+	Another euler conjecture. $a^4 + b^4 + c^4 = d^4$ has no integer solution.
+	This is also false. The first solution is
+	\begin{align*}
+		a & = 95800\\
+		b & = 217519\\
+		c & = 414560\\
+		d & = 422481
+	\end{align*}
+\end{example}
+
+\begin{example}
+	$313(x^3+y^3) = z^3$ has no positive integer solution.\\
+	This is also false but the first $z$ is more than 1,000 digit.
+\end{example}
+
+\begin{example}[Four color theorem]
+	Every map can be color with 4 color such that no adjacent area has the same color.\\
+	
+	There are many failed attempt on this but in the alst 30 years or so people are able to use computer to check almost every case. But that is considered not elegant. Right now, there is a short proof in 2008.
+\end{example}
+
+\begin{example}
+	Every even integer is a sum of two prime numbers.
+	\[
+		\forall x \in \expl{\mathbb{E}}{\text{Even integer}}, \exists a, b \in \expl{\mathbb{P}}{\text{Prime}} \text{ such that } a+b = x
+	\]
+	This remains unproven for several hundred years already.
+\end{example}
+
+The above example is an example of using multiple quantifier together. We must be a bit more careful than usual when using more than one quantifier. For example, the proposition,
+\[
+	\forall x \in I, \exists y \in I \st x+y = 1,
+\]
+is true since for every integer $x$ we can find an integer $y = 1-x$ such that the sum is 1.
+
+However, the proposition,
+\[
+	\exists y \in I \st x+y=1 \forall x\in I
+\]
+is not true. The proposition is asking for whether there is one $y$ that can add to any $x$ such that the sum is always 1. This is not true since
+\begin{itemize}
+	\item Let $x_1$ be the first solution, $y+x_1 = 1$
+	\item Consider $x_2=x_1+1$
+	\item The proposition require also that $y+x_2 = 1$
+	\item But
+		\begin{align*}
+		y+x_2 &= y+(x_1+1)\\
+			&= (y+x_1)+1 \\
+			&= 1+1 = 2.
+		\end{align*}
+	\item Threfore, $y + x_2 \ne 1$. The proposition is false.
+\end{itemize}
+
+\section*{Logical Operators}
+Let $P$ be a proposition. There are couple things we can do with propositions.
+\subsection*{Not}
+We can consider the negate($\sim$) of the proposition. For example,
+\begin{center}
+	This car is red
+\end{center}
+The negate is just
+\begin{center}
+	This car not red
+\end{center}
+
+We can also write a truth table for the negation
+\begin{center}
+	\begin{tabular}{c|c}
+	\hline
+	\hline $P$ & $\sim P$  \\ 
+	\hline T & F  \\ 
+	\hline F & T  \\
+	\hline \hline
+\end{tabular} 
+\end{center}
+\subsection*{And}
+The and($\land$) operator requires that both propositions to be true. For example,
+\begin{center}
+	This car is red \emph{and} has 4 doors
+\end{center}
+This will be true if the car is red and has 4 doors. A car that is blue but has 4 doors is not qualified.
+
+The truth table for and operator is shown below
+\begin{center}
+	\begin{tabular}{c|c||c}
+		\hline\hline $P$ & $Q$ & $P \land Q$ \\ 
+		\hline        T  &  T  &      T      \\ 
+		\hline        T  &  F  &      F      \\ 
+		\hline        F  &  T  &      F      \\ 
+		\hline        F  &  F  &      F      \\ 
+		\hline\hline 
+	\end{tabular} 
+\end{center}
+\subsection*{Or}
+The or($\lor$) operator requires that at least one of the proposition is true.
+\begin{center}
+	The car is red \emph{or} has 4 door.
+\end{center}
+The above proposition is true if the car is 2 door red car.
+
+The truth table for or operator is shown below
+\begin{center}
+	\begin{tabular}{c|c||c}
+		\hline\hline $P$ & $Q$ & $P \lor Q$ \\ 
+		\hline        T  &  T  &      T      \\ 
+		\hline        T  &  F  &      T      \\ 
+		\hline        F  &  T  &      T      \\ 
+		\hline        F  &  F  &      F      \\ 
+		\hline\hline 
+	\end{tabular} 
+\end{center}
+\subsection*{Imply}
+The imply/if-then($\to$) operator indicate an inferral or a promise of some kind.
+\begin{center}
+	If you pay attention in class, you will get an A.
+\end{center}
+This statement is false only if you pay attention in class but you didn't get an A. Of course, the predicate above is still true if there is a student in the class that never pay atten but get an A. But, please please do the homework.
+
+The truth table for imply operator is shown below
+\begin{center}
+	\begin{tabular}{c|c||c}
+		\hline\hline $P$ & $Q$ & $P \to Q$ \\ 
+		\hline        T  &  T  &      T      \\ 
+		\hline        T  &  F  &      F      \\ 
+		\hline        F  &  T  &      T      \\ 
+		\hline        F  &  F  &      T      \\ 
+		\hline\hline 
+	\end{tabular} 
+\end{center}
+
+\subsection*{Equivalent}
+The equivalent/if-and-only-if/iff($\iff$) indicates the equivalence of the truth value of the two proposition.
+\begin{center}
+	You will get an A if and only if you pay attention in class.
+\end{center}
+The proposition above means that if you pay attention in class you will get an A and if you don't then you won't.
+
+The truth tale for iff is shown below
+\begin{center}
+	\begin{tabular}{c|c||c}
+		\hline\hline $P$ & $Q$ & $P \iff Q$ \\ 
+		\hline        T  &  T  &      T      \\ 
+		\hline        T  &  F  &      F      \\ 
+		\hline        F  &  T  &      F      \\ 
+		\hline        F  &  F  &      T      \\ 
+		\hline\hline 
+	\end{tabular} 
+\end{center}
+\subsection*{Combination of those}
+We can combine all these operator as well. Let us show the first identity:
+\[
+	(P \to Q) \land (Q \to P) = P \iff Q
+\]
+To show that the above proposition is true we need to show that it is true of all value of $P$ and $Q$. So, the simplest way is to just check all the cases:
+\end{multicols}
+\begin{table*}[h]
+\begin{center}
+		\begin{tabular}{c|c||c|c||c||c}
+		\hline\hline $P$ & $Q$ & $P \to Q$ & $Q \to P$ & $(P \to Q) \land (Q \to P)$ & $P \iff Q$  \\ 
+		\hline        T  &  T  &      T    &     T     &              T              &     T\\ 
+		\hline        T  &  F  &      F    &     T     &              F              &     F\\
+		\hline        F  &  T  &      F    &     F     &              F              &     F\\ 
+		\hline        F  &  F  &      T    &     T     &              T              &     T\\ 
+		\hline\hline 
+	\end{tabular} 
+\end{center}
+\end{table*}
+\begin{multicols}{2}
+ The above truth table shows that the last two column which are the value of the left hand side(LHS) statement and the value of the right hand side(RHS) are the same for all cases.
+ 
+ Therefore,
+ \[
+ (P \to Q) \land (Q \to P) = P \iff Q
+ \]
+ 
+ As an exercise, you should show that
+ \[
+	 P \to Q = \sim Q \to \sim P
+ \]
+ You will learn this later it is called contrapositive.
+\end{multicols}
+\end{document}

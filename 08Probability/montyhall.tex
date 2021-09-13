@@ -1,0 +1,135 @@
+% tikzpic.tex
+\documentclass[preview,tikz]{standalone}% 'crop' is the default for v1.0, before it was 'preview'
+%\usetikzlibrary{...}% tikz package already loaded by 'tikz' option
+\usetikzlibrary{arrows,shapes,backgrounds,calc}
+\usepackage{amssymb}% http://ctan.org/pkg/amssymb
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\begin{document}
+\tikzstyle{background grid}=[draw, blue!30,step=.5cm,very thin]
+\begin{tikzpicture}[ grow'=right,
+level 1/.style={sibling distance=2.5cm},
+level 2/.style={sibling distance=1cm}, 
+level 3/.style={sibling distance=0.5cm}, 
+level distance=2.5cm]
+\node[](begin){}
+child{
+	node(a) {A}
+	child{
+		node(aa) {A}
+		child{
+			node(aab) {B}
+			edge from parent node[red,above]{\tiny$\frac{1}{2}$}
+		}
+		child{
+			node(aac) {C}
+			edge from parent node[red,below]{\tiny$\frac{1}{2}$}
+		}
+		edge from parent node[red,above]{\tiny$\frac{1}{3}$}
+	}
+	child{
+		node(ab) {B}
+		child{
+			node(abc) {C}
+			edge from parent node[red,above]{\tiny$1$}
+		}
+		edge from parent node[red,above]{\tiny$\frac{1}{3}$}
+	}
+	child{
+		node(ac) {C}
+		child{
+			node(acb) {B}
+			edge from parent node[red,above]{\tiny$1$}
+		}
+		edge from parent node[red,above]{\tiny$\frac{1}{3}$}
+	}
+	edge from parent node[above,red]{\tiny$\frac{1}{3}$}
+}
+child{
+	node(b) {B}
+	child{
+		node(ba) {A}
+		child{
+			node(bac) {C}
+			edge from parent node[red,above]{\tiny$1$}
+		}
+		edge from parent node[red,above]{\tiny$\frac{1}{3}$}
+	}
+	child{
+		node(bb) {B}
+		child{
+			node(bba) {A}
+			edge from parent node[red,above]{\tiny$\frac{1}{2}$}
+		}
+		child{
+			node(bbc) {C}
+			edge from parent node[red,below]{\tiny$\frac{1}{2}$}
+		}
+		edge from parent node[red,above]{\tiny$\frac{1}{3}$}
+	}
+	child{
+		node(bc) {C}
+		child{
+			node(bca) {A}
+			edge from parent node[red,above]{\tiny$1$}
+		}
+		edge from parent node[red,above]{\tiny$\frac{1}{3}$}
+	}
+	edge from parent node[above,red]{\tiny$\frac{1}{3}$}
+}
+child{
+	node(c) {C}
+	child{
+		node(ca) {A}
+		child{
+			node(cab) {B}
+			edge from parent node[red,above]{\tiny$1$}
+		}
+		edge from parent node[red,above]{\tiny$\frac{1}{3}$}
+	}
+	child{
+		node(cb) {B}
+		child{
+			node(cba) {A}
+			edge from parent node[red,above]{\tiny$1$}
+		}
+		edge from parent node[red,above]{\tiny$\frac{1}{3}$}
+	}
+	child{
+		node(cc) {C}
+		child{
+			node(cca) {A}
+			edge from parent node[red,above]{\tiny$\frac{1}{2}$}
+		}
+		child{
+			node(ccb) {B}
+			edge from parent node[red,below]{\tiny$\frac{1}{2}$}
+		}
+		edge from parent node[red,above]{\tiny$\frac{1}{3}$}
+	}
+	edge from parent node[above,red]{\tiny$\frac{1}{3}$}
+};
+\node[right of=aab, xshift=0.5cm](p1) {$(A,A,B)$} child {node(sw) {\xmark} child {node(pr) {$1/18$}}};
+\node[right of=aac, xshift=0.5cm](p1) {$(A,A,C)$} child {node {\xmark} child {node {$1/18$}}};
+\node[right of=abc, xshift=0.5cm](p1) {$(A,B,C)$} child {node {\cmark} child {node {$1/9$}}};
+\node[right of=acb, xshift=0.5cm](p1) {$(A,C,B)$} child {node {\cmark} child {node {$1/9$}}};
+\node[right of=bac, xshift=0.5cm](p1) {$(B,A,C)$} child {node {\cmark} child {node {$1/9$}}};
+\node[right of=bba, xshift=0.5cm](p1) {$(B,B,A)$} child {node {\xmark} child {node {$1/18$}}};
+\node[right of=bbc, xshift=0.5cm](p1) {$(B,B,C)$} child {node {\xmark} child {node {$1/18$}}};
+\node[right of=bca, xshift=0.5cm](p1) {$(B,C,A)$} child {node {\cmark} child {node {$1/9$}}};
+\node[right of=cab, xshift=0.5cm](p1) {$(C,A,B)$} child {node {\cmark} child {node {$1/9$}}};
+\node[right of=cba, xshift=0.5cm](p1) {$(C,B,A)$} child {node {\cmark} child {node {$1/9$}}};
+\node[right of=cca, xshift=0.5cm](p1) {$(C,C,A)$} child {node {\xmark} child {node {$1/18$}}};
+\node[right of=ccb, xshift=0.5cm](p1) {$(C,C,B)$} child {node {\xmark} child {node {$1/18$}}};
+
+%header
+\path let  \p1 = (a) in node at (\x1, 4.5) {Car};
+\path let  \p1 = (aa) in node at (\x1, 4.5) {Pick};
+\path let  \p1 = (aab) in node at (\x1, 4.5) {Open};
+\path let  \p1 = (p1) in node at (\x1, 4.5) {Space};
+\path let  \p1 = (sw) in node at (\x1, 4.5) {Switch Win};
+\path let  \p1 = (pr) in node at (\x1, 4.5) {Prob};
+
+\end{tikzpicture}
+\end{document}
