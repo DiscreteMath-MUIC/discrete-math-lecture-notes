@@ -323,7 +323,7 @@ So, we can also distribute the sum inside the expression.
 
 One thing that students get wrong a lot eventhough it looks trivial is the sum of constants:
 \[
-	\sum_{i=0}^n 3 = \underbrace{3 + 3 + 3 + \ldots + 3}_{\text{There are $n$ of these}} = 3n.
+	\sum_{i=1}^n 3 = \underbrace{3 + 3 + 3 + \ldots + 3}_{\text{There are $n$ of these}} = 3n.
 \]
 So, the answer is $3n$ not 3.
 
@@ -530,12 +530,12 @@ You can get this by just pluggin in a few points. Using the above function we ca
 	\sum_{x=1}^{9} \frac{1}{\sqrt{x}} &\ge \int\limits_{x=0}^{x=8} \frac{1}{\sqrt{x+1}} dx + 1\times \frac{1}{\sqrt{9}}\\
 	& \ge \int\limits_{x=1}^{x=9} \frac{1}{\sqrt{u}} du + \frac{1}{3}\\
 	& \ge 2(3-1)+\frac{1}{3}\\
-	& \ge 5\frac{1}{3}
+	& \ge 4\frac{1}{3}
 \end{align*}
 
 Combining the result from the lower bound and the upper bound we can conclude that
 \[
- 5 \le \sum_{x=1}^{9} \frac{1}{\sqrt{x}} \le 5\frac{1}{3}
+ 5 \ge \sum_{x=1}^{9} \frac{1}{\sqrt{x}} \ge 4\frac{1}{3}
 \]
 
 You can work this out for general upper limit $n$ where you will find that
@@ -599,7 +599,7 @@ if and only if
 
 For example, from the factorial, we can say that
 \[
-	n! \sim n^n e^-n
+	n! \sim n^n e^{-n}
 \]
 
 Let us do a more typical example to illustrate the asymptotic behavior. Consider
